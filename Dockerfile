@@ -17,7 +17,7 @@
 FROM alpine:latest as dependencies
 
 RUN apk add --no-cache \
-    nodejs npm python3 build-base
+    nodejs npm python2 build-base
 
 COPY package.json  .
 RUN npm install 
