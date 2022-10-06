@@ -14,7 +14,7 @@
 # 4. Login to running container (to update config (vi config/app.json): 
 #	docker exec -ti --user root alpine_timeoff /bin/sh
 # --------------------------------------------------------------------
-FROM node:14.20-alpine
+FROM node:16.17-alpine
 
 RUN apk add --update --no-cache python3 build-base
 
