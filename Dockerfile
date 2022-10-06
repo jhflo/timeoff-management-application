@@ -14,10 +14,7 @@
 # 4. Login to running container (to update config (vi config/app.json): 
 #	docker exec -ti --user root alpine_timeoff /bin/sh
 # --------------------------------------------------------------------
-FROM alpine:latest
-
-RUN apk add --no-cache \
-    nodejs npm vim 
+FROM node:14.20-alpine
 
 COPY package.json  .
 RUN npm install 
