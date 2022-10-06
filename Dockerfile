@@ -16,7 +16,7 @@
 # --------------------------------------------------------------------
 FROM node:14.20-alpine
 
-RUN apk add --update --no-cache python3
+RUN apk add --update --no-cache python3 build-base
 
 COPY package.json  .
 RUN npm install 
