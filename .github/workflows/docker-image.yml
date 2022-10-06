@@ -21,6 +21,6 @@ jobs:
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag jorfloba/timeoff-test:$(date +%s)
+      run: docker build . --file Dockerfile --tag jorfloba/timeoff-test:v1
     - name: Push image to repository
-      run: docker push jorfloba/timeoff-test:$(date +%s)
+      run: docker push jorfloba/timeoff-test:v1
