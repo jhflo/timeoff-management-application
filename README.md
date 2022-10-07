@@ -1,7 +1,8 @@
 # Automated deployment on AWS ECS
 
 
-![timeoff (1)](https://user-images.githubusercontent.com/23126803/194595884-56230c36-7581-47ea-b080-9cea6b88f580.jpg)
+![timeoff (2)](https://user-images.githubusercontent.com/23126803/194596914-4fb94c19-eebc-4c09-8e9e-a215e976153d.jpg)
+
 
 
 # TimeOff.Management
