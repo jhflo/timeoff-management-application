@@ -1,0 +1,61 @@
+name: Application deployment automation
+
+on:
+  pull_request:
+    branches: [ "master" ]
+    
+env:
+  AWS_REGION: us-east-1                 
+  ECS_SERVICE: apps-service             
+  ECS_CLUSTER: apps-cluster             
+  ECS_TASK_DEFINITION: task-definition.json 
+  CONTAINER_NAME: timeoff-test  
+  IMAGE_TAG: lastest
+                                         
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Docker login
+      env: 
+        DOCKER_USER: ${{secrets.DOCKER_USER}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+        
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag jorfloba/timeoff-test:$IMAGE_TAG
+    - name: Push image to repository
+      run: docker push jorfloba/timeoff-test:$IMAGE_TAG
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Download task definition
+      run: |
+        aws ecs describe-task-definition --task-definition apps-family --query taskDefinition > task-definition.json
+        
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+        container-name: ${{ env.CONTAINER_NAME }}
+        image: jorfloba/timeoff-test:$IMAGE_TAG
+
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: ${{ env.ECS_SERVICE }}
+        cluster: ${{ env.ECS_CLUSTER }}
+        wait-for-service-stability: true
