@@ -40,6 +40,17 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
+  deploy:
+  
+  
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
     - name: Download task definition
       run: |
         aws ecs describe-task-definition --task-definition apps-family --query taskDefinition > task-definition.json
